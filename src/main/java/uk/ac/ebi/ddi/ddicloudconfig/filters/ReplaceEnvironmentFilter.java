@@ -22,7 +22,7 @@ public class ReplaceEnvironmentFilter implements Filter {
 
         ResponseWrapper capturingResponseWrapper = new ResponseWrapper((HttpServletResponse) response);
         filterChain.doFilter(request, capturingResponseWrapper);
-        if (response.getContentType() != null && response.getContentType().contains("application/json")) {
+        if (response.getContentType() != null) {
             String content = capturingResponseWrapper.getCaptureAsString();
             String res = EnvironmentPropertySource.resolvePlaceholders(environment, content);
             response.setContentLength(res.length());
