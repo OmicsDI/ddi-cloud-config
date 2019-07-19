@@ -39,13 +39,30 @@ spec:
                   name: omicsdi
                   key: MONGO_PORT
             - name: S3_ENDPOINT_URL
-              value: "this-is-sample-endpoint-url"
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_ENDPOINT_URL
             - name: S3_ACCESS_KEY
-              value: "this-is-sample-s3-access-key"
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_ACCESS_KEY
             - name: S3_SECRET_KEY
-              value: "this-is-sample-secret-key"
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_SECRET_KEY
             - name: S3_BUCKET_NAME
-              value: "this-is-sample-bucket-name"
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_BUCKET_NAME
+            - name: S3_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_REGION
             - name: DDI_MONGO_MACHINE_ONE
               value: "mongod-0.mongodb-service.dev.svc.cluster.local"
             - name: DDI_MONGO_MACHINE_TWO
