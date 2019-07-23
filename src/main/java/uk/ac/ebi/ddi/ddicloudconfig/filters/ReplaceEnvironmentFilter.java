@@ -18,11 +18,12 @@ public class ReplaceEnvironmentFilter implements Filter {
     public void destroy() { }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
 
         ResponseWrapper capturingResponseWrapper = new ResponseWrapper((HttpServletResponse) response);
         filterChain.doFilter(request, capturingResponseWrapper);
-        if (response.getContentType() != null && response.getContentType().contains("application/json")) {
+        if (response.getContentType() != null) {
             String content = capturingResponseWrapper.getCaptureAsString();
             String res = EnvironmentPropertySource.resolvePlaceholders(environment, content);
             response.setContentLength(res.length());
@@ -31,7 +32,7 @@ public class ReplaceEnvironmentFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException {
+    public void init(FilterConfig arg0) {
         environment = new StandardEnvironment();
     }
 }

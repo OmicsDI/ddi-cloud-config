@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omicsdi-ddi-cloud-config-deployment
+  namespace: dataflow
+spec:
+  selector:
+    matchLabels:
+      app: omicsdi-ddi-cloud-config-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: omicsdi-ddi-cloud-config-pod
+    spec:
+      containers:
+        - name: omicsdi-ddi-cloud-config
+          imagePullPolicy: Always
+          image: omicsdi/ddi-cloud-config:omicsdi.dev.01
+          env:
+            - name: DDI_MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: MONGO_DB
+            - name: DDI_MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: MONGO_USER
+            - name: DDI_MONGO_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: MONGO_PASSWD
+            - name: DDI_MONGO_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: MONGO_PORT
+            - name: S3_ENDPOINT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_ENDPOINT_URL
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_SECRET_KEY
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_BUCKET_NAME
+            - name: S3_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: S3_REGION
+            - name: DDI_MONGO_MACHINE_ONE
+              value: "mongod-0.mongodb-service.dev.svc.cluster.local"
+            - name: DDI_MONGO_MACHINE_TWO
+              value: "mongod-0.mongodb-service.dev.svc.cluster.local"
+            - name: DDI_MONGO_MACHINE_THREE
+              value: "mongod-0.mongodb-service.dev.svc.cluster.local"
+            - name: DDI_MONGO_AUTH_DB
+              valueFrom:
+                secretKeyRef:
+                  name: omicsdi
+                  key: MONGO_AUTH_DB
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omicsdi-ddi-cloud-config
+  namespace: dataflow
+  labels:
+    app: omicsdi-ddi-cloud-config
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector:
+    app: omicsdi-ddi-cloud-config-pod
